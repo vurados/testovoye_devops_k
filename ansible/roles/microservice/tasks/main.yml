@@ -1,3 +1,16 @@
+- name: Ensure group exists
+  group:
+    name: "{{ app_group }}"
+    state: present
+
+- name: Ensure user exists
+  user:
+    name: "{{ app_user }}"
+    group: "{{ app_group }}"
+    createhome: no
+    system: yes
+    shell: /sbin/nologin
+
 - name: Include systemd tasks
   ansible.builtin.include_tasks: systemd.yml
   when: deploy_method == "systemd"

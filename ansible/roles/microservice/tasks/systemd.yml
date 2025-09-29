@@ -1,16 +1,3 @@
-- name: Ensure group exists
-  group:
-    name: "{{ app_group }}"
-    state: present
-
-- name: Ensure user exists
-  user:
-    name: "{{ app_user }}"
-    group: "{{ app_group }}"
-    createhome: no
-    system: yes
-    shell: /sbin/nologin
-
 - name: Ensure packages
   package:
     name: "{{ packages_redhat }}"
