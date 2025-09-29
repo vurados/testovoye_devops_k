@@ -1,0 +1,7 @@
+- name: Include systemd tasks
+  ansible.builtin.include_tasks: systemd.yml
+  when: deploy_method == "systemd"
+
+- name: Include container tasks
+  ansible.builtin.include_tasks: container.yml
+  when: deploy_method == "container"

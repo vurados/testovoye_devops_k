@@ -1,0 +1,9 @@
+- name: daemon-reload
+  systemd:
+    daemon_reload: yes
+
+- name: restart microservice
+  systemd:
+    name: "{{ service_name }}"
+    state: restarted
+    enabled: yes

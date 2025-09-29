@@ -1,0 +1,73 @@
+- name: Ensure group exists
+  group:
+    name: "{{ app_group }}"
+    state: present
+
+- name: Ensure user exists
+  user:
+    name: "{{ app_user }}"
+    group: "{{ app_group }}"
+    createhome: no
+    system: yes
+    shell: /sbin/nologin
+
+- name: Ensure packages
+  package:
+    name: "{{ packages_redhat }}"
+    state: present
+  when: ansible_os_family == 'RedHat'
+
+- name: Create application directory
+  file:
+    path: "{{ app_dir }}"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0755'
+
+- name: Copy application files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ app_dir }}/{{ item }}"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0644'
+  loop:
+    - app.py
+    - requirements.txt
+  notify: restart microservice
+
+- name: Create python virtualenv
+  command: python3 -m venv "{{ venv_path }}"
+  args:
+    creates: "{{ venv_path }}/bin/activate"
+
+- name: Install packages in virtual environment
+  pip:
+    requirements: "{{ app_dir }}/requirements.txt"
+    virtualenv: "{{ venv_path }}"
+    virtualenv_python: python3
+
+- name: Create systemd unit
+  template:
+    src: microservice.service.j2
+    dest: /etc/systemd/system/{{ service_name }}.service
+    owner: root
+    group: root
+    mode: '0644'
+  notify: daemon-reload
+
+- name: Ensure service enabled and started
+  systemd:
+    name: "{{ service_name }}"
+    enabled: yes
+    state: started
+    daemon_reload: yes
+
+- name: Open firewall port 8080 (if firewalld present)
+  firewalld:
+    port: 8080/tcp
+    permanent: yes
+    state: enabled
+    immediate: yes
+  when: ansible_facts.services is defined and ('firewalld.service' in ansible_facts.services)

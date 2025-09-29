@@ -1,0 +1,11 @@
+app_user: microservice
+app_group: microservice
+deploy_method: systemd   # или container
+container_runtime: podman
+image_name: microservice:latest
+app_dir: /opt/microservice
+venv_path: "{{ app_dir }}/venv"
+service_name: microservice
+packages_redhat:
+  - python3
+  - python3-pip

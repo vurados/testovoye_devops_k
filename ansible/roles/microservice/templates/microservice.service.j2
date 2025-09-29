@@ -1,0 +1,16 @@
+[Unit]
+Description=Microservice exposing Prometheus metrics
+After=network.target
+
+[Service]
+Type=simple
+User={{ app_user }}
+Group={{ app_group }}
+WorkingDirectory={{ app_dir }}
+ExecStart={{ venv_path }}/bin/python {{ app_dir }}/app.py
+Restart=always
+RestartSec=3s
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

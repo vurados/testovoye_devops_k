@@ -1,0 +1,52 @@
+- name: Ensure group exists
+  group:
+    name: "{{ app_group }}"
+    state: present
+
+- name: Ensure user exists
+  user:
+    name: "{{ app_user }}"
+    group: "{{ app_group }}"
+    createhome: no
+    system: yes
+    shell: /sbin/nologin
+
+- name: Ensure container runtime installed
+  ansible.builtin.package:
+    name: "{{ container_runtime }}"
+    state: present
+
+- name: Create application directory
+  file:
+    path: "/tmp/microservice"
+    state: directory
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
+    mode: '0755'
+
+- name: Copy app files for image build
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/tmp/microservice/{{ item }}"
+  loop:
+    - app.py
+    - requirements.txt
+    - Dockerfile
+
+- name: Build container image
+  containers.podman.podman_image:
+    name: "{{ image_name }}"
+    path: /tmp/microservice
+    state: build
+    build:
+      force_rm: true
+
+- name: Run microservice container
+  containers.podman.podman_container:
+    name: microservice
+    image: "{{ image_name }}"
+    state: started
+    restart_policy: always
+    recreate: yes
+    published_ports:
+      - "8080:8080"
