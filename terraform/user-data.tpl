@@ -32,7 +32,7 @@ users:
     passwd: ${root_passwd}
     ssh_authorized_keys: ${root_ssh_keys}
 
-timezone: Europe/London
+timezone: Europe/Moscow
 
 # package_update: true
 # Below upgrades packages
