@@ -85,30 +85,12 @@ edit -> connection details -> Storage
 ```
 и следовать инструкции
 
-после чего публичный ключ нужно добавить в файл terraform.tfvars в поля ansible_ssh_keys и root_ssh_keys
 
-ansible_ssh_keys = [
-  "ssh-rsa <публичный ключ>"
-]
-root_ssh_keys = [
-  "ssh-rsa <публичный ключ>"
-]
-
-и
-
-main.tf в последней строчке в output добавить путь до ключа ansible_ssh_private_key_file=ваш/путь/ключ
-
-output "ansible_inventory" {
-  value = <<EOT
-[vm]
-${libvirt_domain.alma9.network_interface.0.addresses.0} ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/id_rsa ansible_python_interpreter=/usr/bin/python3
-EOT
-}
 
 ```sh
     cd terraform
     terraform init
-    terraform apply -auto-approve
+    terraform apply -auto-approve -var="ssh_public_key_path=~/.ssh/my_key.pub" -var="ssh_private_key_path=~/.ssh/my_key"
     terraform output -raw ansible_inventory > ../ansible/inventory.ini
 ```
 При возникающих промптах при выполнении команд terraform init и terraform apply просто нажать Enter
