@@ -79,6 +79,8 @@ edit -> connection details -> Storage
 
 2. Создание VM с Terraform
 
+Основана на данном Terroform конфиге из https://github.com/omerfsen/terraform-almalinux-libvirt
+
 Перед созданием ВМ необходимо создать ssh ключи командой
 ```sh
     ssh-keygen
