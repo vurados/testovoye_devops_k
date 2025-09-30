@@ -9,8 +9,10 @@ resource "libvirt_volume" "alma9_qcow2" {
 data "template_file" "user_data" {
   template = file("${path.module}/user-data.tpl")
   vars = {
-    ansible_ssh_keys = jsonencode(var.ansible_ssh_keys)
-    root_ssh_keys = jsonencode(var.root_ssh_keys)
+    # ansible_ssh_keys = jsonencode(var.ansible_ssh_keys)
+    # root_ssh_keys = jsonencode(var.root_ssh_keys)
+    ansible_ssh_keys = jsonencode([file(var.ssh_public_key_path)])
+    root_ssh_keys    = jsonencode([file(var.ssh_public_key_path)])
     ansible_passwd = var.ansible_passwd
     root_passwd = var.root_passwd
   }
@@ -63,6 +65,8 @@ resource "libvirt_domain" "alma9" {
     listen_type = "address"
     autoport    = true
   }
+
+  autostart = true
 }
 
 output "vm_ip" {
@@ -72,6 +76,6 @@ output "vm_ip" {
 output "ansible_inventory" {
   value = <<EOT
 [vm]
-${libvirt_domain.alma9.network_interface.0.addresses.0} ansible_user=ansible ansible_ssh_private_key_file=~/.ssh/id_ed25519 ansible_python_interpreter=/usr/bin/python3
+${libvirt_domain.alma9.network_interface.0.addresses.0} ansible_user=ansible ansible_ssh_private_key_file=${var.ssh_private_key_path} ansible_python_interpreter=/usr/bin/python3
 EOT
 }

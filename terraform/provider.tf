@@ -8,7 +8,6 @@ terraform {
 
 }
 
-
 provider "libvirt" {
   uri = "qemu:///system"
   alias = "libvirt"

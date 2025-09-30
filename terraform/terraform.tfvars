@@ -15,7 +15,3 @@ alma9_volume_source = "https://repo.almalinux.org/almalinux/9/cloud/x86_64/image
 # echo "test" | mkpasswd -m sha-512 -s
 ansible_passwd = "$6$T6g./2x.fLBA4KRO$uSQy6XVsvwccGb.JEaICrPlu7HKnjbDTyG9XtjiaETNaAZ5mnnUZb5qdoF9GGHRIoNQY0pS/OnkTinYfqeFye0"
 root_passwd  = "$6$T6g./2x.fLBA4KRO$uSQy6XVsvwccGb.JEaICrPlu7HKnjbDTyG9XtjiaETNaAZ5mnnUZb5qdoF9GGHRIoNQY0pS/OnkTinYfqeFye0"
-ansible_ssh_keys = [
-]
-root_ssh_keys = [
-]

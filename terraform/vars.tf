@@ -44,6 +44,17 @@ variable "alma9_domain_vcpu" {
 variable "alma9_network_name" {
 }
 
+variable "ssh_public_key_path" {
+  description = "Path to the SSH public key"
+  type        = string
+  default     = "~/.ssh/id_ed25519.pub"
+}
+
+variable "ssh_private_key_path" {
+  description = "Path to the SSH private key"
+  type        = string
+  default     = "~/.ssh/id_ed25519"
+}
 
 variable "ansible_passwd" {
   description = "user password"
@@ -54,14 +65,4 @@ variable "root_passwd" {
   description = "root password"
   type        = string
 
-}
-
-variable "ansible_ssh_keys" {
-  description = "SSH authorized keys for user ansible"
-  type        = list(string)
-}
-
-variable "root_ssh_keys" {
-  description = "SSH authorized keys for user root"
-  type        = list(string)
 }
